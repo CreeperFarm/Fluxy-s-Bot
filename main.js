@@ -6,8 +6,11 @@ let rawdata = fs.readFileSync('config.json');
 let config = JSON.parse(rawdata);
 
 const TOKEN = config.botToken;
-prefix = "?";
-//const prefix = config.prefix;
+
+prefix = "$";
+
+// TODO: Fix it
+//  prefix = config.prefix;
 
 client.on("ready", () => {
     console.log("Logged in as " + client.user.tag + "! The prefix is " + prefix + " .");
@@ -52,21 +55,16 @@ client.on('messageCreate', msg => {
         const embed = new EmbedBuilder()
            .setColor('#B072FF')
            .setTitle("Liste des commandes:")
-           .setAuthor({name: "CreeperFarm", iconURL: "https://avatars.githubusercontent.com/u/62711198?s=96&v=4", url:"https://github.com/CreeperFarm"})
+           .setAuthor({name: "Serveur de Fluxy"})
+           .setFooter({text: "Développé par CreeperFarm", iconURL: "https://avatars.githubusercontent.com/u/62711198?s=96&v=4", url:"https://github.com/CreeperFarm"})
            .addFields(
                 {name: prefix + "help", value: "Affiche la liste des commandes."},
                 {name: prefix + "ping", value: "Affiche Pong!"},
                 {name: prefix + "twitch", value: "Affiche le lien de la chaîne Twitch."},
-                {name: prefix + "youtube ou " + prefix + "yt ou " + prefix, value: "Affiche le lien de la chaîne Youtube."},
-                {name: prefix + "twitter ou " + prefix + "x", value: "Affiche le lien du compte Twitter (X)."},
                 {name: prefix + "tiktok", value: "Affiche le lien du compte TikTok."},
-                {name: prefix + "github", value: "Affiche le lien du compte GitHub."},
                 {name: prefix + "instagram", value: "Affiche le lien du compte Instagram."},
-                {name: prefix + "kick", value: "Affiche le lien du compte kick."},
-                {name: prefix + "réseaux ou " + prefix + "reseaux", value: "Affiche le lien de tous les réseaux."}
-        
+                //{name: prefix + "réseaux ou " + prefix + "reseaux", value: "Affiche le lien de tous les réseaux."},
             )
-           .addFields({name: prefix + "", value: "Add soon ..."});
         msg.reply({ embeds: [embed]});
         console.log("Help command sent");
     }
@@ -78,37 +76,21 @@ client.on('messageCreate', msg => {
 
     // Social networks links
     if (msg.content === prefix + "twitch") {
-        msg.reply("Le lien de la chaîne Twitch est https://www.twitch.tv/creeperfarm");
+        msg.reply("Le lien de la chaîne Twitch est https://www.twitch.tv/jxstefluxy");
         console.log("Twitch link sent");
     }
-    if (msg.content === prefix + "youtube" || msg.content === prefix + "yt" || msg.content === prefix + "ytb") {
-        msg.reply("Le lien de la chains Youtube est https://www.youtube.com/@creeperfarm");
-        console.log("Youtube link sent");
-    }
-    if (msg.content === prefix + "twitter" || msg.content === prefix + "x") {
-        msg.reply("Le lien du compte Twitter (X) est https://twitter.com/FarmCreeper");
-        console.log("Twitter link sent");
-    }
     if (msg.content === prefix + "tiktok") {
-        msg.reply("Le lien du compte TikTok est https://www.tiktok.com/@creeperfarm");
+        msg.reply("Le lien du compte TikTok est https://www.tiktok.com/@jxstefluxy");
         console.log("TikTok link sent");
     }
-    if (msg.content === prefix + "github") {
-        msg.reply("Le lien du compte GitHub est https://github.com/creeperfarm")
-        console.log("GitHub link sent");
-    }
     if (msg.content === prefix + "instagram") {
-        msg.reply("Le lien du compte Instagram est https://www.instagram.com/creeperfarm/")
+        msg.reply("Le lien du compte Instagram est https://www.instagram.com/jxste_fluxy._/")
         console.log("Instagram link sent");
     }
-    if (msg.content === prefix + "kick") {
-        msg.reply("Le lien duu compte kick est https://www.kick.com/creeperfarm")
-        console.log("Kick link sent");
-    }
-    if (msg.content === prefix + "réseaux" || msg.content === prefix + "reseaux") {
-        msg.reply("Le lien de tous les réseaux est https://linktr.ee/creeperfarm")
-        console.log("All links sent");
-    }
+    //if (msg.content === prefix + "réseaux" || msg.content === prefix + "reseaux") {
+    //    msg.reply("Le lien de tous les réseaux est https://linktr.ee/creeperfarm")
+    //    console.log("All links sent");
+    //}
 });
 
 // Send a message every minute
