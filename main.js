@@ -11,11 +11,21 @@ const TOKEN = config.botToken;
 
 prefix = "$";
 
+testmode = true;
+
 // TODO: Fix it
 //  prefix = config.prefix;
 
 client.on("ready", () => {
-    console.log("Logged in as " + client.user.tag + "! The prefix is " + prefix + " .");
+    if (testmode = true) {
+        console.log("Logged in as " + client.user.tag + "! The prefix is " + prefix + " . The bot is in test mod.");
+        const channel = client.channels.cache.find(ch => ch.name === 'testbot');
+        channel.send("Le bot est en ligne !");
+    } else {
+        console.log("Logged in as " + client.user.tag + "! The prefix is " + prefix + " .");
+        const channel = client.channels.cache.find(ch => ch.name === '『🤖』commandes');
+        channel.send("Le bot est en ligne !");
+    }
 });
 
 // msg when someone join the server
@@ -48,186 +58,190 @@ client.on('guildMemberRemove', member => {
 });
 
 // Respond to commands
-client.on('messageCreate', msg => {
-    if (msg.author.bot) return;
-
-
-    // Help command
-    if (msg.content === prefix + "help"){
-        const embed = new EmbedBuilder()
-           .setColor('#B072FF')
-           .setTitle("Liste des commandes:")
-           .setAuthor({name: "Serveur de Fluxy"})
-           .setFooter({text: "Développé par CreeperFarm", iconURL: "https://avatars.githubusercontent.com/u/62711198?s=96&v=4", url:"https://github.com/CreeperFarm"})
-           .addFields(
-                {name: "Commande Standard : ", value: " "},
-                {name: prefix + "help", value: "Affiche la liste des commandes."},
-                {name: prefix + "ping", value: "Affiche Pong!"},
-                {name: prefix + "twitch", value: "Affiche le lien de la chaîne Twitch."},
-                {name: prefix + "tiktok", value: "Affiche le lien du compte TikTok."},
-                {name: prefix + "instagram", value: "Affiche le lien du compte Instagram."},
-                //{name: prefix + "réseaux ou " + prefix + "reseaux", value: "Affiche le lien de tous les réseaux."},
-                {name: "Commande de modération : ", value: " "},
-                {name: prefix + "clear", value: "Supprime le nombre de messages indiqués."}
-                //{name: prefix + "warn", value: "Avertis un membre."},
-                //{name: prefix + "unwarn", value: "Unavertis un membre."},
-                //{name: prefix + "warnspectate", value: "Indique le nombre de warn à atteindre pour être spectateur."},
-            )
-        msg.reply({ embeds: [embed]});
-        console.log("Help command sent");
-    }
-
-    if (msg.content === prefix + "ping") {
-        msg.reply("Pong!");
-        console.log("Pong!");
-    }
-
-    // Social networks links
-    if (msg.content === prefix + "twitch") {
-        msg.reply("Le lien de la chaîne Twitch est https://www.twitch.tv/jxstefluxy");
-        console.log("Twitch link sent");
-    }
-    if (msg.content === prefix + "tiktok") {
-        msg.reply("Le lien du compte TikTok est https://www.tiktok.com/@jxstefluxy");
-        console.log("TikTok link sent");
-    }
-    if (msg.content === prefix + "instagram") {
-        msg.reply("Le lien du compte Instagram est https://www.instagram.com/jxste_fluxy._/")
-        console.log("Instagram link sent");
-    }
-    //if (msg.content === prefix + "réseaux" || msg.content === prefix + "reseaux") {
-    //    msg.reply("Le lien de tous les réseaux est https://linktr.ee/creeperfarm")
-    //    console.log("All links sent");
-    //}
-
-    // Clear command
-    if (msg.content.startsWith(prefix + "clear")) {
-        if (msg.member.permissions.has("MANAGE_MESSAGES") == true) {
-            if (msg.content === prefix + "clear") {
-                msg.channel.bulkDelete(1);
-                msg.channel.send("Veuillez indiquer le nombre de messages à supprimer.");
-                console.log("Clear explain sent");
-            } else {
-                try {
-                    let args = msg.content.split(" ");
-                    if (args[1] > 100) {
-                        msg.reply("Veuillez indiquer un nombre inférieur à 100.");
-                        console.log("Too many messages to delete");
-                    } else if (args[1] < 1) {
-                        msg.reply("Veuillez indiquer un nombre supérieur à 0.");
-                        console.log("Too few messages to delete");
-                    } else {
-                        msg.channel.bulkDelete(args[1]);
-                        msg.channel.send(args[1] + " messages supprimés.");
-                        // wait 5 seconds then delete the msg
-                        setTimeout(() => {msg.channel.bulkDelete(1);}, 25000);
-                        console.log(args[1] + " messages deleted");
-                    }
-                } catch (err) {
-                    msg.reply("Veuillez indiquer un nombre valide.");
-                    console.log(err);
-                }
-            }
-        } else {
-            msg.reply("Vous n'avez pas la permission de faire ça.");
-            console.log("Permission denied");
+try {
+    client.on('messageCreate', msg => {
+        if (msg.author.bot) return;
+    
+    
+        // Help command
+        if (msg.content === prefix + "help"){
+            const embed = new EmbedBuilder()
+               .setColor('#B072FF')
+               .setTitle("Liste des commandes:")
+               .setAuthor({name: "Serveur de Fluxy"})
+               .setFooter({text: "Développé par CreeperFarm", iconURL: "https://avatars.githubusercontent.com/u/62711198?s=96&v=4", url:"https://github.com/CreeperFarm"})
+               .addFields(
+                    {name: "Commande Standard : ", value: " "},
+                    {name: prefix + "help", value: "Affiche la liste des commandes."},
+                    {name: prefix + "ping", value: "Affiche Pong!"},
+                    {name: prefix + "twitch", value: "Affiche le lien de la chaîne Twitch."},
+                    {name: prefix + "tiktok", value: "Affiche le lien du compte TikTok."},
+                    {name: prefix + "instagram", value: "Affiche le lien du compte Instagram."},
+                    //{name: prefix + "réseaux ou " + prefix + "reseaux", value: "Affiche le lien de tous les réseaux."},
+                    {name: "Commande de modération : ", value: " "},
+                    {name: prefix + "clear", value: "Supprime le nombre de messages indiqués."}
+                    //{name: prefix + "warn", value: "Avertis un membre."},
+                    //{name: prefix + "unwarn", value: "Unavertis un membre."},
+                    //{name: prefix + "warnspectate", value: "Indique le nombre de warn à atteindre pour être spectateur."},
+                )
+            msg.reply({ embeds: [embed]});
+            console.log("Help command sent");
         }
-    }
-
-    // Warn command
-    if (msg.content.startsWith(prefix + "warn")) {
-        if (msg.member.permissions.has("MANAGE_ROLES") == true) {
-            if (msg.content === prefix + "warn") {
-                msg.reply("Veuillez indiquer le membre à avertir.");
-                console.log("Warn explain sent");
-            } else {
-                let args = msg.content.split(" ");
-                try {
-                    let dUser = msg.mentions.users.first();
-                    console.log(dUser.id);
-                    console.log(dUser);
-                    if (dUser = msg.guild.members.cache.get(dUser.id)) {
-                        if (args[2] === undefined) {
-                            msg.reply("Veuillez indiquer la raison de l'avertissement.");
-                            console.log("Warn reason explain sent");
+    
+        if (msg.content === prefix + "ping") {
+            msg.reply("Pong!");
+            console.log("Pong!");
+        }
+    
+        // Social networks links
+        if (msg.content === prefix + "twitch") {
+            msg.reply("Le lien de la chaîne Twitch est https://www.twitch.tv/jxstefluxy");
+            console.log("Twitch link sent");
+        }
+        if (msg.content === prefix + "tiktok") {
+            msg.reply("Le lien du compte TikTok est https://www.tiktok.com/@jxstefluxy");
+            console.log("TikTok link sent");
+        }
+        if (msg.content === prefix + "instagram") {
+            msg.reply("Le lien du compte Instagram est https://www.instagram.com/jxste_fluxy._/")
+            console.log("Instagram link sent");
+        }
+        //if (msg.content === prefix + "réseaux" || msg.content === prefix + "reseaux") {
+        //    msg.reply("Le lien de tous les réseaux est https://linktr.ee/creeperfarm")
+        //    console.log("All links sent");
+        //}
+    
+        // Clear command
+        if (msg.content.startsWith(prefix + "clear")) {
+            if (msg.member.permissions.has("MANAGE_MESSAGES") == true) {
+                if (msg.content === prefix + "clear") {
+                    msg.channel.bulkDelete(1);
+                    msg.channel.send("Veuillez indiquer le nombre de messages à supprimer.");
+                    console.log("Clear explain sent");
+                } else {
+                    try {
+                        let args = msg.content.split(" ");
+                        if (args[1] > 100) {
+                            msg.reply("Veuillez indiquer un nombre inférieur à 100.");
+                            console.log("Too many messages to delete");
+                        } else if (args[1] < 1) {
+                            msg.reply("Veuillez indiquer un nombre supérieur à 0.");
+                            console.log("Too few messages to delete");
                         } else {
-                            // Combine the args[2] and plus to make the reason
-                            let reason = args.slice(2).join(' ');
-                            const warns = require("./warns.json");
-                            if (!warns[dUser.id]) {
-                                warns[dUser.id] = {
-                                    reason: reason,
-                                    date: Date.now(), 
-                                    mod: msg.author.id
-                                }
-                            } else {
-                                warns[dUser.id].warns.push({
-                                    reason: reason,
-                                    date: Date.now(),
-                                    mod: msg.author.id
-                                })
-                            }
-                            console.log(warns)
-                            fs.writeFileSync('./warns.json', JSON.stringify(warns), function (err) {
-                                console.log(err);
-                            });
-                            msg.reply(`${dUser} a été averti pour ${reason} par ${msg.author}.`);
-                            console.log(dUser + " has been warned for " + reason + " by " + msg.author + ".");
+                            msg.channel.bulkDelete(args[1]);
+                            msg.channel.send(args[1] + " messages supprimés.");
+                            // wait 5 seconds then delete the msg
+                            setTimeout(() => {msg.channel.bulkDelete(1);}, 25000);
+                            console.log(args[1] + " messages deleted");
                         }
+                    } catch (err) {
+                        msg.reply("Veuillez indiquer un nombre valide.");
+                        console.log(err);
                     }
-                    else {
-                        msg.reply("Veuillez indiquer le membre à avertir.");
-                        console.log("Warn explain sent");
-                    }
-                } catch (err) {
-                    msg.reply("Veuillez mentionnez un utilisateur. An error occured.");
-                    console.log(err);
                 }
-            }
-        } else {
-            msg.reply("Vous n'avez pas la permission de faire ça.");
-            console.log("Permission denied");
-        }
-    }
-
-    // Unwarn command
-    if (msg.content.startsWith(prefix + "unwarn")) {
-        if (msg.member.permissions.has("MANAGE_ROLES") == true) {
-            if (msg.content === prefix + "unwarn") {
-                msg.channel.bulkDelete(1);
-                msg.channel.send("Veuillez indiquer le membre à unavertir.");
-                console.log("Unwarn explain sent");
             } else {
-                let args = msg.content.split(" ");
-                msg.channel.bulkDelete(1);
-                msg.channel.send(dUser + " a été unaverti.");
-                console.log(dUser + " has been unwarned");
+                msg.reply("Vous n'avez pas la permission de faire ça.");
+                console.log("Permission denied");
             }
-        } else {
-            msg.channel.send("Vous n'avez pas la permission de faire ça.");
-            console.log("Permission denied");
         }
-    }
-
-    // Warn number spectate command
-    if (msg.content.startsWith(prefix + "warnspectate")) {
-        if (msg.member.permissions.has("MANAGE_ROLES") == true) {
-            if (msg.content === prefix + "warnspectate") {
-                msg.channel.bulkDelete(1);
-                msg.channel.send("Veuillez indiquer le nombre de warn à atteindre.");
-                console.log("Warnnumber explain sent");
+    
+        // Warn command
+        if (msg.content.startsWith(prefix + "warn")) {
+            if (msg.member.permissions.has("MANAGE_ROLES") == true) {
+                if (msg.content === prefix + "warn") {
+                    msg.reply("Veuillez indiquer le membre à avertir.");
+                    console.log("Warn explain sent");
+                } else {
+                    let args = msg.content.split(" ");
+                    try {
+                        let dUser = msg.mentions.users.first();
+                        console.log(dUser.id);
+                        console.log(dUser);
+                        if (dUser = msg.guild.members.cache.get(dUser.id)) {
+                            if (args[2] === undefined) {
+                                msg.reply("Veuillez indiquer la raison de l'avertissement.");
+                                console.log("Warn reason explain sent");
+                            } else {
+                                // Combine the args[2] and plus to make the reason
+                                let reason = args.slice(2).join(' ');
+                                const warns = require("./warns.json");
+                                if (!warns[dUser.id]) {
+                                    warns[dUser.id] = {
+                                        reason: reason,
+                                        date: Date.now(), 
+                                        mod: msg.author.id
+                                    }
+                                } else {
+                                    warns[dUser.id].warns.push({
+                                        reason: reason,
+                                        date: Date.now(),
+                                        mod: msg.author.id
+                                    })
+                                }
+                                console.log(warns)
+                                fs.writeFileSync('./warns.json', JSON.stringify(warns), function (err) {
+                                    console.log(err);
+                                });
+                                msg.reply(`${dUser} a été averti pour ${reason} par ${msg.author}.`);
+                                console.log(dUser + " has been warned for " + reason + " by " + msg.author + ".");
+                            }
+                        }
+                        else {
+                            msg.reply("Veuillez indiquer le membre à avertir.");
+                            console.log("Warn explain sent");
+                        }
+                    } catch (err) {
+                        msg.reply("Veuillez mentionnez un utilisateur. An error occured.");
+                        console.log(err);
+                    }
+                }
             } else {
-                let args = msg.content.split(" ");
-                msg.channel.bulkDelete(1);
-                msg.channel.send("Le nombre de warn à atteindre est " + dUser + ".");
-                console.log("Warnnumber set to " + dUser);
+                msg.reply("Vous n'avez pas la permission de faire ça.");
+                console.log("Permission denied");
             }
-        } else {
-            msg.channel.send("Vous n'avez pas la permission de faire ça.");
-            console.log("Permission denied");
         }
-    }
-});
+    
+        // Unwarn command
+        if (msg.content.startsWith(prefix + "unwarn")) {
+            if (msg.member.permissions.has("MANAGE_ROLES") == true) {
+                if (msg.content === prefix + "unwarn") {
+                    msg.channel.bulkDelete(1);
+                    msg.channel.send("Veuillez indiquer le membre à unavertir.");
+                    console.log("Unwarn explain sent");
+                } else {
+                    let args = msg.content.split(" ");
+                    msg.channel.bulkDelete(1);
+                    msg.channel.send(dUser + " a été unaverti.");
+                    console.log(dUser + " has been unwarned");
+                }
+            } else {
+                msg.channel.send("Vous n'avez pas la permission de faire ça.");
+                console.log("Permission denied");
+            }
+        }
+    
+        // Warn number spectate command
+        if (msg.content.startsWith(prefix + "warnspectate")) {
+            if (msg.member.permissions.has("MANAGE_ROLES") == true) {
+                if (msg.content === prefix + "warnspectate") {
+                    msg.channel.bulkDelete(1);
+                    msg.channel.send("Veuillez indiquer le nombre de warn à atteindre.");
+                    console.log("Warnnumber explain sent");
+                } else {
+                    let args = msg.content.split(" ");
+                    msg.channel.bulkDelete(1);
+                    msg.channel.send("Le nombre de warn à atteindre est " + dUser + ".");
+                    console.log("Warnnumber set to " + dUser);
+                }
+            } else {
+                msg.channel.send("Vous n'avez pas la permission de faire ça.");
+                console.log("Permission denied");
+            }
+        }
+    });
+} catch (err) {
+    console.log(err);
+}
 
 // Send a msg every minute
 minutes = 0;
