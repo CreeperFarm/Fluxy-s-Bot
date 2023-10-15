@@ -1,11 +1,14 @@
 const { exec } = require('child_process');
-const {Client, Events, GatewayIntentBits, EmbedBuilder, messageLink} = require('discord.js');
+const {Client, Events, GatewayIntentBits, EmbedBuilder, messageLink, Message} = require('discord.js');
 const fs = require('fs');
+const { resolve } = require('path');
 const client = new Client({intents: [GatewayIntentBits.MessageContent, GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.DirectMessages]});
 
 const warns = JSON.parse(fs.readFileSync('./warns.json'))
 let rawdata = fs.readFileSync('config.json');
 let config = JSON.parse(rawdata);
+
+const print = console.log;
 
 const TOKEN = config.botToken;
 
@@ -59,19 +62,18 @@ client.on('guildMemberRemove', member => {
 });
 
 // Respond to commands
-try {
-    client.on('messageCreate', msg => {
-        if (msg.author.bot) return;
+client.on('messageCreate', msg => {
+    if (msg.author.bot) return;
     
     
-        // Help command
-        if (msg.content === prefix + "help"){
-            const embed = new EmbedBuilder()
-               .setColor('#B072FF')
-               .setTitle("Liste des commandes:")
-               .setAuthor({name: "Serveur de Fluxy"})
-               .setFooter({text: "Développé par CreeperFarm", iconURL: "https://avatars.githubusercontent.com/u/62711198?s=96&v=4", url:"https://github.com/CreeperFarm"})
-               .addFields(
+    // Help command
+    if (msg.content === prefix + "help"){
+        const embed = new EmbedBuilder()
+            .setColor('#B072FF')
+            .setTitle("Liste des commandes:")
+            .setAuthor({name: "Serveur de Fluxy"})
+            .setFooter({text: "Développé par CreeperFarm", iconURL: "https://avatars.githubusercontent.com/u/62711198?s=96&v=4", url:"https://github.com/CreeperFarm"})
+            .addFields(
                     {name: "Commande Standard : ", value: " "},
                     {name: prefix + "help", value: "Affiche la liste des commandes."},
                     {name: prefix + "ping", value: "Affiche Pong!"},
@@ -239,10 +241,102 @@ try {
                 console.log("Permission denied");
             }
         }
-    });
-} catch (err) {
-    console.log(err);
-}
+
+        // Change log command
+        if (msg.content.startsWith(prefix + "change-log") || msg.content.startsWith(prefix + "changelog")) {
+            if (msg.author.id == "455390851598778368") {
+                if (msg.content === prefix + "change-log" || msg.content === prefix + "changelog") {
+                    msg.channel.send("Veuillez indiquer le message du changelog.");
+                    console.log("Changelog explain sent");
+                } else {
+                    if (testmode = true) {
+                        const channel = client.channels.cache.find(ch => ch.name === 'testbot');
+                        let args = msg.content.split(",");
+                        if (args[0].startsWith(prefix + "changelog")) {
+                            args[0] = args[0].replace(prefix + "changelog", "");
+                        } else {
+                            args[0] = args[0].replace(prefix + "change-log", "");
+                        }
+                                                
+                        changenum = 1;
+                        
+                        // For each element in args, add a field to the embed
+                        fieldsMap = []
+                        args.forEach(Element => {
+                            fieldsMap.push({name: changenum, value: Element})
+                            changenum++;
+                        })
+
+                        embed = {
+                            color: 0xB072FF,
+                            title: "Change Log du bot:",
+                            author: {
+                                name: "Serveur de Fluxy"
+                            },
+                            footer: {
+                                text: "Développé par CreeperFarm",
+                                iconURL: "https://avatars.githubusercontent.com/u/62711198?s=96&v=4",
+                                url:"https://github.com/CreeperFarm"
+                            },
+                            fields: fieldsMap
+                        }
+
+                        console.log("Changelog send by " + msg.author + " are " + args);
+                        return msg.channel.send({ embeds: [embed]});
+                    } else {
+                        const channel = client.channels.cache.find(ch => ch.name === '『🤖』change-log-du-bot');
+                        let args = msg.content.split(",");
+                        if (args[0].startsWith(prefix + "changelog")) {
+                            args[0] = args[0].replace(prefix + "changelog", "");
+                        } else {
+                            args[0] = args[0].replace(prefix + "change-log", "");
+                        }
+                                                
+                        changenum = 1;
+                        
+                        // For each element in args, add a field to the embed
+                        fieldsMap = []
+                        args.forEach(Element => {
+                            fieldsMap.push({name: changenum, value: Element})
+                            changenum++;
+                        })
+
+                        embed = {
+                            color: 0xB072FF,
+                            title: "Change Log du bot:",
+                            author: {
+                                name: "Serveur de Fluxy"
+                            },
+                            footer: {
+                                text: "Développé par CreeperFarm",
+                                iconURL: "https://avatars.githubusercontent.com/u/62711198?s=96&v=4",
+                                url:"https://github.com/CreeperFarm"
+                            },
+                            fields: fieldsMap
+                        }
+
+                        console.log("Changelog send by " + msg.author + " are " + args);
+                        return msg.channel.send({ embeds: [embed]});
+                    }
+                }
+            } else {
+                msg.channel.send("Vous n'avez pas la permission de faire ça.");
+                console.log("Permission denied");
+            }
+        }
+
+        // Stop Command
+        if (msg.content === prefix + "stop") {
+            if (msg.author.id === "455390851598778368") {
+                msg.channel.send("Arrêt du bot.");
+                console.log("Bot stopped by " + msg.author + "(CreeperFarm).");
+                client.destroy();
+            } else {
+                msg.reply("Vous n'avez pas la permission de faire ça.");
+                console.log("Permission denied to stop the bot");
+            }
+    }
+});
 
 // Send a msg every minute
 minutes = 0;
