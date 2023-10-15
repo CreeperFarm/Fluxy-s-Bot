@@ -4,23 +4,29 @@ const fs = require('fs');
 const { resolve } = require('path');
 const client = new Client({intents: [GatewayIntentBits.MessageContent, GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.DirectMessages]});
 
-const warns = JSON.parse(fs.readFileSync('./warns.json'))
+warns = JSON.parse(fs.readFileSync('./warns.json'))
+statusofbot = JSON.parse(fs.readFileSync('./status.json'))
 let rawdata = fs.readFileSync('config.json');
 let config = JSON.parse(rawdata);
+const TOKEN = config.botToken;
 
 const print = console.log;
 
-const TOKEN = config.botToken;
-
 prefix = "$";
 
-testmode = true;
+if (statusofbot === "in-dev") {
+    testmode = true;
+} else if (statusofbot === "in-prod") {
+    testmode = true;
+} else if (statusofbot === "normal") {
+    testmode = false;
+}
 
 // TODO: Fix it
 //  prefix = config.prefix;
 
 client.on("ready", () => {
-    if (testmode = true) {
+    if (testmode == true) {
         console.log("Logged in as " + client.user.tag + "! The prefix is " + prefix + " . The bot is in test mod.");
         const channel = client.channels.cache.find(ch => ch.name === 'testbot');
         channel.send("Le bot est en ligne !");
@@ -64,8 +70,8 @@ client.on('guildMemberRemove', member => {
 // Respond to commands
 client.on('messageCreate', msg => {
     if (msg.author.bot) return;
-    
-    
+
+
     // Help command
     if (msg.content === prefix + "help"){
         const embed = new EmbedBuilder()
@@ -74,47 +80,48 @@ client.on('messageCreate', msg => {
             .setAuthor({name: "Serveur de Fluxy"})
             .setFooter({text: "Développé par CreeperFarm", iconURL: "https://avatars.githubusercontent.com/u/62711198?s=96&v=4", url:"https://github.com/CreeperFarm"})
             .addFields(
-                    {name: "Commande Standard : ", value: " "},
-                    {name: prefix + "help", value: "Affiche la liste des commandes."},
-                    {name: prefix + "ping", value: "Affiche Pong!"},
-                    {name: prefix + "twitch", value: "Affiche le lien de la chaîne Twitch."},
-                    {name: prefix + "tiktok", value: "Affiche le lien du compte TikTok."},
-                    {name: prefix + "instagram", value: "Affiche le lien du compte Instagram."},
-                    //{name: prefix + "réseaux ou " + prefix + "reseaux", value: "Affiche le lien de tous les réseaux."},
-                    {name: "Commande de modération : ", value: " "},
-                    {name: prefix + "clear", value: "Supprime le nombre de messages indiqués."}
-                    //{name: prefix + "warn", value: "Avertis un membre."},
-                    //{name: prefix + "unwarn", value: "Unavertis un membre."},
-                    //{name: prefix + "warnspectate", value: "Indique le nombre de warn à atteindre pour être spectateur."},
-                )
-            msg.reply({ embeds: [embed]});
-            console.log("Help command sent");
-        }
-    
-        if (msg.content === prefix + "ping") {
-            msg.reply("Pong!");
-            console.log("Pong!");
-        }
-    
-        // Social networks links
-        if (msg.content === prefix + "twitch") {
-            msg.reply("Le lien de la chaîne Twitch est https://www.twitch.tv/jxstefluxy");
-            console.log("Twitch link sent");
-        }
-        if (msg.content === prefix + "tiktok") {
-            msg.reply("Le lien du compte TikTok est https://www.tiktok.com/@jxstefluxy");
-            console.log("TikTok link sent");
-        }
-        if (msg.content === prefix + "instagram") {
-            msg.reply("Le lien du compte Instagram est https://www.instagram.com/jxste_fluxy._/")
-            console.log("Instagram link sent");
-        }
-        //if (msg.content === prefix + "réseaux" || msg.content === prefix + "reseaux") {
-        //    msg.reply("Le lien de tous les réseaux est https://linktr.ee/creeperfarm")
-        //    console.log("All links sent");
-        //}
-    
-        // Clear command
+                {name: "Commande Standard : ", value: " "},
+                {name: prefix + "help", value: "Affiche la liste des commandes."},
+                {name: prefix + "ping", value: "Affiche Pong!"},
+                {name: prefix + "twitch", value: "Affiche le lien de la chaîne Twitch."},
+                {name: prefix + "tiktok", value: "Affiche le lien du compte TikTok."},
+                {name: prefix + "instagram", value: "Affiche le lien du compte Instagram."},
+                //{name: prefix + "réseaux ou " + prefix + "reseaux", value: "Affiche le lien de tous les réseaux."},
+                {name: "Commande de modération : ", value: " "},
+                {name: prefix + "clear", value: "Supprime le nombre de messages indiqués."}
+                //{name: prefix + "warn", value: "Avertis un membre."},
+                //{name: prefix + "unwarn", value: "Unavertis un membre."},
+                //{name: prefix + "warnspectate", value: "Indique le nombre de warn à atteindre pour être spectateur."},
+            )
+        msg.reply({ embeds: [embed]});
+        console.log("Help command sent");
+    }
+
+    if (msg.content === prefix + "ping") {
+        msg.reply("Pong!");
+        console.log("Pong!");
+    }
+
+    // Social networks links
+    if (msg.content === prefix + "twitch") {
+        msg.reply("Le lien de la chaîne Twitch est https://www.twitch.tv/jxstefluxy");
+        console.log("Twitch link sent");
+    }
+    if (msg.content === prefix + "tiktok") {
+        msg.reply("Le lien du compte TikTok est https://www.tiktok.com/@jxstefluxy");
+        console.log("TikTok link sent");
+    }
+    if (msg.content === prefix + "instagram") {
+        msg.reply("Le lien du compte Instagram est https://www.instagram.com/jxste_fluxy._/")
+        console.log("Instagram link sent");
+    }
+    //if (msg.content === prefix + "réseaux" || msg.content === prefix + "reseaux") {
+    //    msg.reply("Le lien de tous les réseaux est https://linktr.ee/creeperfarm")
+    //    console.log("All links sent");
+    //}
+
+    // Clear command
+    try {
         if (msg.content.startsWith(prefix + "clear")) {
             if (msg.member.permissions.has("MANAGE_MESSAGES") == true) {
                 if (msg.content === prefix + "clear") {
@@ -124,7 +131,10 @@ client.on('messageCreate', msg => {
                 } else {
                     try {
                         let args = msg.content.split(" ");
-                        if (args[1] > 100) {
+                        if (args[1] === undefined) {
+                            msg.reply("Veuillez indiquer un nombre de messages à supprimer.");
+                            console.log("No number of messages to delete");
+                        } else if (args[1] > 100) {
                             msg.reply("Veuillez indiquer un nombre inférieur à 100.");
                             console.log("Too many messages to delete");
                         } else if (args[1] < 1) {
@@ -134,7 +144,7 @@ client.on('messageCreate', msg => {
                             msg.channel.bulkDelete(args[1]);
                             msg.channel.send(args[1] + " messages supprimés.");
                             // wait 5 seconds then delete the msg
-                            setTimeout(() => {msg.channel.bulkDelete(1);}, 25000);
+                            setTimeout(() => {msg.channel.bulkDelete(2);}, 12000);
                             console.log(args[1] + " messages deleted");
                         }
                     } catch (err) {
@@ -147,194 +157,243 @@ client.on('messageCreate', msg => {
                 console.log("Permission denied");
             }
         }
-    
-        // Warn command
-        if (msg.content.startsWith(prefix + "warn")) {
-            if (msg.member.permissions.has("MANAGE_ROLES") == true) {
-                if (msg.content === prefix + "warn") {
-                    msg.reply("Veuillez indiquer le membre à avertir.");
-                    console.log("Warn explain sent");
-                } else {
-                    let args = msg.content.split(" ");
-                    try {
-                        let dUser = msg.mentions.users.first();
-                        console.log(dUser.id);
-                        console.log(dUser);
-                        if (dUser = msg.guild.members.cache.get(dUser.id)) {
-                            if (args[2] === undefined) {
-                                msg.reply("Veuillez indiquer la raison de l'avertissement.");
-                                console.log("Warn reason explain sent");
-                            } else {
-                                // Combine the args[2] and plus to make the reason
-                                let reason = args.slice(2).join(' ');
-                                const warns = require("./warns.json");
-                                if (!warns[dUser.id]) {
-                                    warns[dUser.id] = {
-                                        reason: reason,
-                                        date: Date.now(), 
-                                        mod: msg.author.id
-                                    }
-                                } else {
-                                    warns[dUser.id].warns.push({
-                                        reason: reason,
-                                        date: Date.now(),
-                                        mod: msg.author.id
-                                    })
+    } catch (err) {
+        console.log(err);
+        msg.reply("An error as ocurred");
+    }
+
+    // Warn command
+    if (msg.content.startsWith(prefix + "warn")) {
+        if (msg.member.permissions.has("MANAGE_ROLES") == true) {
+            if (msg.content === prefix + "warn") {
+                msg.reply("Veuillez indiquer le membre à avertir.");
+                console.log("Warn explain sent");
+            } else {
+                let args = msg.content.split(" ");
+                try {
+                    let dUser = msg.mentions.users.first();
+                    console.log(dUser.id);
+                    console.log(dUser);
+                    if (dUser = msg.guild.members.cache.get(dUser.id)) {
+                        if (args[2] === undefined) {
+                            msg.reply("Veuillez indiquer la raison de l'avertissement.");
+                            console.log("Warn reason explain sent");
+                        } else {
+                            // Combine the args[2] and plus to make the reason
+                            let reason = args.slice(2).join(' ');
+                            const warns = require("./warns.json");
+                            if (!warns[dUser.id]) {
+                                warns[dUser.id] = {
+                                    reason: reason,
+                                    date: Date.now(),
+                                    mod: msg.author.id
                                 }
-                                console.log(warns)
-                                fs.writeFileSync('./warns.json', JSON.stringify(warns), function (err) {
-                                    console.log(err);
-                                });
-                                msg.reply(`${dUser} a été averti pour ${reason} par ${msg.author}.`);
-                                console.log(dUser + " has been warned for " + reason + " by " + msg.author + ".");
+                            } else {
+                                warns[dUser.id].warns.push({
+                                    reason: reason,
+                                    date: Date.now(),
+                                    mod: msg.author.id
+                                })
                             }
+                            console.log(warns)
+                            fs.writeFileSync('./warns.json', JSON.stringify(warns), function (err) {
+                                console.log(err);
+                            });
+                            msg.reply(`${dUser} a été averti pour ${reason} par ${msg.author}.`);
+                            console.log(dUser + " has been warned for " + reason + " by " + msg.author + ".");
                         }
-                        else {
-                            msg.reply("Veuillez indiquer le membre à avertir.");
-                            console.log("Warn explain sent");
-                        }
-                    } catch (err) {
-                        msg.reply("Veuillez mentionnez un utilisateur. An error occured.");
-                        console.log(err);
                     }
+                    else {
+                        msg.reply("Veuillez indiquer le membre à avertir.");
+                        console.log("Warn explain sent");
+                    }
+                } catch (err) {
+                    msg.reply("Veuillez mentionnez un utilisateur. An error occured.");
+                    console.log(err);
                 }
-            } else {
-                msg.reply("Vous n'avez pas la permission de faire ça.");
-                console.log("Permission denied");
             }
+        } else {
+            msg.reply("Vous n'avez pas la permission de faire ça.");
+            console.log("Permission denied");
         }
-    
-        // Unwarn command
-        if (msg.content.startsWith(prefix + "unwarn")) {
-            if (msg.member.permissions.has("MANAGE_ROLES") == true) {
-                if (msg.content === prefix + "unwarn") {
-                    msg.channel.bulkDelete(1);
-                    msg.channel.send("Veuillez indiquer le membre à unavertir.");
-                    console.log("Unwarn explain sent");
-                } else {
-                    let args = msg.content.split(" ");
-                    msg.channel.bulkDelete(1);
-                    msg.channel.send(dUser + " a été unaverti.");
-                    console.log(dUser + " has been unwarned");
-                }
+    }
+
+    // Unwarn command
+    if (msg.content.startsWith(prefix + "unwarn")) {
+        if (msg.member.permissions.has("MANAGE_ROLES") == true) {
+            if (msg.content === prefix + "unwarn") {
+                msg.channel.bulkDelete(1);
+                msg.channel.send("Veuillez indiquer le membre à unavertir.");
+                console.log("Unwarn explain sent");
             } else {
-                msg.channel.send("Vous n'avez pas la permission de faire ça.");
-                console.log("Permission denied");
+                let args = msg.content.split(" ");
+                msg.channel.bulkDelete(1);
+                msg.channel.send(dUser + " a été unaverti.");
+                console.log(dUser + " has been unwarned");
             }
+        } else {
+            msg.channel.send("Vous n'avez pas la permission de faire ça.");
+            console.log("Permission denied");
         }
-    
-        // Warn number spectate command
-        if (msg.content.startsWith(prefix + "warnspectate")) {
-            if (msg.member.permissions.has("MANAGE_ROLES") == true) {
-                if (msg.content === prefix + "warnspectate") {
-                    msg.channel.bulkDelete(1);
-                    msg.channel.send("Veuillez indiquer le nombre de warn à atteindre.");
-                    console.log("Warnnumber explain sent");
-                } else {
-                    let args = msg.content.split(" ");
-                    msg.channel.bulkDelete(1);
-                    msg.channel.send("Le nombre de warn à atteindre est " + dUser + ".");
-                    console.log("Warnnumber set to " + dUser);
-                }
+    }
+
+    // Warn number spectate command
+    if (msg.content.startsWith(prefix + "warnspectate")) {
+        if (msg.member.permissions.has("MANAGE_ROLES") == true) {
+            if (msg.content === prefix + "warnspectate") {
+                msg.channel.bulkDelete(1);
+                msg.channel.send("Veuillez indiquer le nombre de warn à atteindre.");
+                console.log("Warnnumber explain sent");
             } else {
-                msg.channel.send("Vous n'avez pas la permission de faire ça.");
-                console.log("Permission denied");
+                let args = msg.content.split(" ");
+                msg.channel.bulkDelete(1);
+                msg.channel.send("Le nombre de warn à atteindre est " + dUser + ".");
+                console.log("Warnnumber set to " + dUser);
             }
+        } else {
+            msg.channel.send("Vous n'avez pas la permission de faire ça.");
+            console.log("Permission denied");
         }
+    }
 
-        // Change log command
-        if (msg.content.startsWith(prefix + "change-log") || msg.content.startsWith(prefix + "changelog")) {
-            if (msg.author.id == "455390851598778368") {
-                if (msg.content === prefix + "change-log" || msg.content === prefix + "changelog") {
-                    msg.channel.send("Veuillez indiquer le message du changelog.");
-                    console.log("Changelog explain sent");
-                } else {
-                    if (testmode = true) {
-                        const channel = client.channels.cache.find(ch => ch.name === 'testbot');
-                        let args = msg.content.split(",");
-                        if (args[0].startsWith(prefix + "changelog")) {
-                            args[0] = args[0].replace(prefix + "changelog", "");
-                        } else {
-                            args[0] = args[0].replace(prefix + "change-log", "");
-                        }
-                                                
-                        changenum = 1;
-                        
-                        // For each element in args, add a field to the embed
-                        fieldsMap = []
-                        args.forEach(Element => {
-                            fieldsMap.push({name: changenum, value: Element})
-                            changenum++;
-                        })
-
-                        embed = {
-                            color: 0xB072FF,
-                            title: "Change Log du bot:",
-                            author: {
-                                name: "Serveur de Fluxy"
-                            },
-                            footer: {
-                                text: "Développé par CreeperFarm",
-                                iconURL: "https://avatars.githubusercontent.com/u/62711198?s=96&v=4",
-                                url:"https://github.com/CreeperFarm"
-                            },
-                            fields: fieldsMap
-                        }
-
-                        console.log("Changelog send by " + msg.author + " are " + args);
-                        return msg.channel.send({ embeds: [embed]});
+    // Change log command
+    if (msg.content.startsWith(prefix + "change-log") || msg.content.startsWith(prefix + "changelog")) {
+        if (msg.author.id == "455390851598778368") {
+            if (msg.content === prefix + "change-log" || msg.content === prefix + "changelog") {
+                msg.channel.send("Veuillez indiquer le message du changelog.");
+                console.log("Changelog explain sent");
+            } else {
+                if (testmode === true) {
+                    const channel = client.channels.cache.find(ch => ch.name === 'testbot');
+                    let args = msg.content.split(",");
+                    if (args[0].startsWith(prefix + "changelog")) {
+                        args[0] = args[0].replace(prefix + "changelog", "");
                     } else {
-                        const channel = client.channels.cache.find(ch => ch.name === '『🤖』change-log-du-bot');
-                        let args = msg.content.split(",");
-                        if (args[0].startsWith(prefix + "changelog")) {
-                            args[0] = args[0].replace(prefix + "changelog", "");
-                        } else {
-                            args[0] = args[0].replace(prefix + "change-log", "");
-                        }
-                                                
-                        changenum = 1;
-                        
-                        // For each element in args, add a field to the embed
-                        fieldsMap = []
-                        args.forEach(Element => {
-                            fieldsMap.push({name: changenum, value: Element})
-                            changenum++;
-                        })
-
-                        embed = {
-                            color: 0xB072FF,
-                            title: "Change Log du bot:",
-                            author: {
-                                name: "Serveur de Fluxy"
-                            },
-                            footer: {
-                                text: "Développé par CreeperFarm",
-                                iconURL: "https://avatars.githubusercontent.com/u/62711198?s=96&v=4",
-                                url:"https://github.com/CreeperFarm"
-                            },
-                            fields: fieldsMap
-                        }
-
-                        console.log("Changelog send by " + msg.author + " are " + args);
-                        return msg.channel.send({ embeds: [embed]});
+                        args[0] = args[0].replace(prefix + "change-log", "");
                     }
-                }
-            } else {
-                msg.channel.send("Vous n'avez pas la permission de faire ça.");
-                console.log("Permission denied");
-            }
-        }
 
-        // Stop Command
-        if (msg.content === prefix + "stop") {
-            if (msg.author.id === "455390851598778368") {
-                msg.channel.send("Arrêt du bot.");
-                console.log("Bot stopped by " + msg.author + "(CreeperFarm).");
-                client.destroy();
-            } else {
-                msg.reply("Vous n'avez pas la permission de faire ça.");
-                console.log("Permission denied to stop the bot");
+                    changenum = 1;
+
+                    // For each element in args, add a field to the embed
+                    fieldsMap = []
+                    args.forEach(Element => {
+                        fieldsMap.push({name: "Changement n°" + changenum + ":", value: Element})
+                        changenum++;
+                    })
+
+                    embed = {
+                        color: 0xB072FF,
+                        title: "Change Log du bot:",
+                        author: {
+                            name: "Serveur de Fluxy"
+                        },
+                        footer: {
+                            text: "Développé par CreeperFarm",
+                            iconURL: "https://avatars.githubusercontent.com/u/62711198?s=96&v=4",
+                            url:"https://github.com/CreeperFarm"
+                        },
+                        fields: fieldsMap
+                    }
+
+                    console.log("Changelog send by " + msg.author + " are " + args);
+                    return channel.send({ embeds: [embed]});
+                } else {
+                    const channel = client.channels.cache.find(ch => ch.name === '『🤖』change-log-du-bot');
+                    let args = msg.content.split(",");
+                    if (args[0].startsWith(prefix + "changelog")) {
+                        args[0] = args[0].replace(prefix + "changelog", "");
+                    } else {
+                        args[0] = args[0].replace(prefix + "change-log", "");
+                    }
+
+                    changenum = 1;
+
+                    // For each element in args, add a field to the embed
+                    fieldsMap = []
+                    args.forEach(Element => {
+                        fieldsMap.push({name: "Changement n°" + changenum + ":", value: Element})
+                        changenum++;
+                    })
+
+                    embed = {
+                        color: 0xB072FF,
+                        title: "Change Log du bot:",
+                        author: {
+                            name: "Serveur de Fluxy"
+                        },
+                        footer: {
+                            text: "Développé par CreeperFarm",
+                            iconURL: "https://avatars.githubusercontent.com/u/62711198?s=96&v=4",
+                            url:"https://github.com/CreeperFarm"
+                        },
+                        fields: fieldsMap
+                    }
+
+                    console.log("Changelog send by " + msg.author + " are " + args);
+                    return channel.send({ embeds: [embed]});
+                }
             }
+        } else {
+            msg.channel.send("Vous n'avez pas la permission de faire ça.");
+            console.log("Permission denied");
+        }
+    }
+
+    if (msg.content.startsWith(prefix + "status") || msg.content.startsWith(prefix + "status-bot") || msg.content.startsWith(prefix + "statusbot")) {
+        if (msg.author.id == "455390851598778368") {
+            if (msg.content === prefix + "status" || msg.content === prefix + "status-bot" || msg.content === prefix + "statusbot") {
+                msg.channel.send(`Le statut actuel du bot est : ${statusofbot}.`);
+                console.log("Statut actuelle envoyé");
+            } else {
+                if (msg.content === prefix + "status help" || msg.content === "status-bot help" || msg.content === prefix + "statusbot help") {
+                    msg.channel.send("Les statuts disponibles sont : in-dev, in-prod, normal.");
+                    msg.channel.send(`Le statut actuel du bot est : ${statusofbot}.`);
+                    console.log("Statut help envoyé");
+                } else if (msg.content === prefix + "status normal" || msg.content === prefix + "statusbot normal" || msg.content === prefix + "status-bot normal") {
+                    statusofbot = "normal";
+                    fs.writeFileSync('./status.json', JSON.stringify(statusofbot), function (err) {
+                        console.log(err);
+                    });
+                    msg.channel.send("Le statut du bot est maintenant en mode normal.");
+                    console.log("Statut normal set");
+                    testmode = false;
+                } else if (msg.content === prefix + "status in-dev" || msg.content === prefix + "statusbot in-dev" || msg.content === prefix + "status-bot in-dev") {
+                    statusofbot = "in-dev";
+                    fs.writeFileSync('./status.json', JSON.stringify(statusofbot), function (err) {
+                        console.log(err);
+                    });
+                    msg.channel.send("Le statut du bot est maintenant en mode in-dev.");
+                    console.log("Statut in-dev set");
+                    testmode = true;
+                } else if (msg.content === prefix + "status in-prod" || msg.content === prefix + "statusbot in-prod" || msg.content === prefix + "status-bot in-prod") {
+                    statusofbot = "in-prod";
+                    fs.writeFileSync('./status.json', JSON.stringify(statusofbot), function (err) {
+                        console.log(err);
+                    });
+                    msg.channel.send("Le statut du bot est maintenant en mode in-prod.");
+                    console.log("Statut in-prod set");
+                    testmode = true;
+                } else {
+                    msg.channel.send("Veuillez indiquer un statut valide.");
+                    console.log("Statut invalide");
+                }
+            }
+        } else {
+            msg.channel.send(`Le statut actuel du bot est : ${statusofbot}.`);
+            console.log("Statut actuelle envoyé");
+        }
+    }
+
+    // Stop Command
+    if (msg.content === prefix + "stop") {
+        if (msg.author.id === "455390851598778368") {
+            msg.channel.send("Arrêt du bot.");
+            console.log("Bot stopped by " + msg.author + "(CreeperFarm).");
+            client.destroy();
+        } else {
+            msg.reply("Vous n'avez pas la permission de faire ça.");
+            console.log("Permission denied to stop the bot");
+        }
     }
 });
 
