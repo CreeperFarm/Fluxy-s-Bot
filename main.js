@@ -31,17 +31,18 @@ client.on("ready", () => {
 // msg when someone join the server
 
 client.on('guildMemberAdd', member => {
-    const channel = member.guild.channels.cache.find(ch => ch.name === 'arriver-départ-✈');
+    const channel = member.guild.channels.cache.find(ch => ch.name === '『🌎』acceuil');
     console.log(member.guild.memberCount);
     if (!channel) return;
     const embed = new EmbedBuilder()
         .setColor('#B072FF')
         .setTitle("Quelqu'un vient d'arriver !")
-        .setAuthor({name: "CreeperFarm", iconURL: "https://avatars.githubusercontent.com/u/62711198?s=96&v=4", url:"https://github.com/CreeperFarm"})
+        .setAuthor({name: "Serveur de Fluxy"})
         .addFields(
             {name: `Bienvenue à toi ${member} sur le serveur !`},
             {name: "Nous sommes désormais " + member.guild.memberCount + " sur le serveur !"}
         )
+        .setFooter({text: "Développé par CreeperFarm", iconURL: "https://avatars.githubusercontent.com/u/62711198?s=96&v=4", url:"https://github.com/CreeperFarm"})
     channel.send({ embeds: [embed]});
     console.log(member.guild.memberCount + " members on the server");
     console.log(member + " joined the server");
@@ -50,7 +51,7 @@ client.on('guildMemberAdd', member => {
 // msg when someone leave the server
 
 client.on('guildMemberRemove', member => {
-    const channel = member.guild.channels.cache.find(ch => ch.name === 'arriver-départ-✈');
+    const channel = member.guild.channels.cache.find(ch => ch.name === '『🌎』acceuil');
     if (!channel) return;
     channel.send(`${member} a quitté le serveur, à bientôt !`);
     console.log(member.guild.memberCount + " members on the server");
