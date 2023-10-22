@@ -5,6 +5,7 @@ const fs = require('fs');
 const client = new Client({intents: [GatewayIntentBits.MessageContent, GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.DirectMessages, GatewayIntentBits.GuildModeration]});
 
 const config = require('./config.js');
+const { channel } = require('diagnostics_channel');
 warns = JSON.parse(fs.readFileSync('./warns.json'))
 statusofbot = JSON.parse(fs.readFileSync('./status.json'))
 
@@ -55,7 +56,7 @@ client.on("ready", async () => {
         const channel = client.channels.cache.find(ch => ch.name === '『🤖』commandes');
         channel.send("Le bot est en ligne !");
     }
-    /*client.user.setPresence({
+    client.user.setPresence({
         activities: [{
             name: "Development",
             type: ActivityType.Playing,
@@ -63,7 +64,7 @@ client.on("ready", async () => {
             state: "Being developed by CreeperFarm",
             assets: "./src/images/logo_bot.png",
         }],
-    });*/
+    });
     //client.user.bannerUrl(["https://cdn.statically.io/gh/CreeperFarm/AppManga/main/fw.jpg"]);
 });
 
@@ -106,11 +107,7 @@ client.on('guildMemberRemove', member => {
 
 // Respond to commands
 client.on('messageCreate', msg => {
-    //if (msg.author.bot) return;
-    if (msg.author.bot) {
-        console.log(msg.author.id);
-    }
-
+    if (msg.author.bot) return;
 
     // Help command
     if (msg.content === prefix + "help"){
@@ -431,15 +428,57 @@ client.on('messageCreate', msg => {
     }
 
     // Stop Command
-    if (msg.content === prefix + "stop") {
-        if (msg.author.id === ownerid) {
-            msg.channel.send("Arrêt du bot.");
-            console.log("Bot stopped by " + msg.author + "(CreeperFarm).");
-            client.destroy();
-        } else {
-            msg.reply("Vous n'avez pas la permission de faire ça.");
-            console.log("Permission denied to stop the bot");
+    try {
+        if (msg.content === prefix + "stop") {
+            if (msg.author.id === ownerid) {
+                msg.channel.send("Arrêt du bot.");
+                console.log("Bot stopped by " + msg.author + "(CreeperFarm).");
+                client.destroy();
+            } else {
+                msg.reply("Vous n'avez pas la permission de faire ça.");
+                console.log("Permission denied to stop the bot");
+            }
         }
+    } catch (err) {
+        msg.reply("An error as ocurred");
+        console.log(err);
+    }
+    
+    // Restart Command
+    try {
+        if (msg.content === prefix + "restart") {
+            if (msg.author.id = ownerid) {
+                msg.reply("Redémarrage du bot.");
+                console.log("Bot restarted by " + msg.author + ".");
+                client.destroy();
+                client.login(config.token);
+                client.on("ready", () => {
+                    if (testmode === true) {
+                        console.log("Logged in as " + client.user.tag + "! The prefix is " + prefix + " . The bot is in test mod.");
+                        const channel = client.channels.cache.find(ch => ch.name === 'testbot');
+                        channel.send("Le bot est en ligne !");
+                    } else {
+                        console.log("Logged in as " + client.user.tag + "! The prefix is " + prefix + " .");
+                        const channel = client.channels.cache.find(ch => ch.name === '『🤖』commandes');
+                        channel.send("Le bot est en ligne !");
+                    }
+                    client.user.setPresence({
+                        activities: [{
+                            name: "Development",
+                            type: ActivityType.Playing,
+                            //url: "https://twitch.tv/CreeperFarm",
+                            state: "Being developed by CreeperFarm",
+                        }],
+                    });
+                });
+            } else {
+                msg.reply("Vous n'avez pas la permission de faire ça.");
+                console.log("Permission denied to restart the bot");
+            }
+        }
+    } catch (err) {
+        msg.reply("An error as ocurred");
+        console.log(err);
     }
 });
 
