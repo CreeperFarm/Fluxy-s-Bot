@@ -1,8 +1,5 @@
 # Fluxy's Bot
 
-<h4>This project contain :</h4>
-<p align="left">
-  <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=nodejs,discord,bots" />
-  </a>
-</p>
+### This project contain :
+
+![I Use : Image]("https://skillicons.dev/icons?i=nodejs,discord,bots")
