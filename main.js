@@ -2,7 +2,7 @@ const { exec } = require('child_process');
 const {Client, Events, GatewayIntentBits, EmbedBuilder, messageLink, Message} = require('discord.js');
 const fs = require('fs');
 const { resolve } = require('path');
-const client = new Client({intents: [GatewayIntentBits.MessageContent, GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.DirectMessages]});
+const client = new Client({intents: [GatewayIntentBits.MessageContent, GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.DirectMessages, GatewayIntentBits.GuildModeration]});
 
 warns = JSON.parse(fs.readFileSync('./warns.json'))
 statusofbot = JSON.parse(fs.readFileSync('./status.json'))
@@ -26,7 +26,7 @@ if (statusofbot === "in-dev") {
 //  prefix = config.prefix;
 
 client.on("ready", () => {
-    if (testmode == true) {
+    if (testmode === true) {
         console.log("Logged in as " + client.user.tag + "! The prefix is " + prefix + " . The bot is in test mod.");
         const channel = client.channels.cache.find(ch => ch.name === 'testbot');
         channel.send("Le bot est en ligne !");
@@ -123,38 +123,44 @@ client.on('messageCreate', msg => {
     // Clear command
     try {
         if (msg.content.startsWith(prefix + "clear")) {
-            if (msg.member.permissions.has("MANAGE_MESSAGES") == true) {
-                if (msg.content === prefix + "clear") {
-                    msg.channel.bulkDelete(1);
-                    msg.channel.send("Veuillez indiquer le nombre de messages à supprimer.");
-                    console.log("Clear explain sent");
-                } else {
-                    try {
-                        let args = msg.content.split(" ");
-                        if (args[1] === undefined) {
-                            msg.reply("Veuillez indiquer un nombre de messages à supprimer.");
-                            console.log("No number of messages to delete");
-                        } else if (args[1] > 100) {
-                            msg.reply("Veuillez indiquer un nombre inférieur à 100.");
-                            console.log("Too many messages to delete");
-                        } else if (args[1] < 1) {
-                            msg.reply("Veuillez indiquer un nombre supérieur à 0.");
-                            console.log("Too few messages to delete");
-                        } else {
-                            msg.channel.bulkDelete(args[1]);
-                            msg.channel.send(args[1] + " messages supprimés.");
-                            // wait 5 seconds then delete the msg
-                            setTimeout(() => {msg.channel.bulkDelete(2);}, 12000);
-                            console.log(args[1] + " messages deleted");
+            try {
+                if (msg.member.permissions.has("MANAGE_MESSAGES") === true) {
+                    if (msg.content === prefix + "clear") {
+                        msg.channel.bulkDelete(1);
+                        msg.channel.send("Veuillez indiquer le nombre de messages à supprimer.");
+                        console.log("Clear explain sent");
+                    } else {
+                        try {
+                            let args = msg.content.split(" ");
+                            if (args[1] === undefined) {
+                                msg.reply("Veuillez indiquer un nombre de messages à supprimer.");
+                                console.log("No number of messages to delete");
+                            } else if (args[1] > 100) {
+                                msg.reply("Veuillez indiquer un nombre inférieur à 100.");
+                                console.log("Too many messages to delete");
+                            } else if (args[1] < 1) {
+                                msg.reply("Veuillez indiquer un nombre supérieur à 0.");
+                                console.log("Too few messages to delete");
+                            } else {
+                                msg.channel.bulkDelete(args[1]);
+                                msg.channel.send(args[1] + " messages supprimés.");
+                                // wait 5 seconds then delete the msg
+                                setTimeout(() => {msg.channel.bulkDelete(2);}, 12000);
+                                console.log(args[1] + " messages deleted");
+                            }
+                        } catch (err) {
+                            msg.reply("Veuillez indiquer un nombre valide.");
+                            console.log(err);
                         }
-                    } catch (err) {
-                        msg.reply("Veuillez indiquer un nombre valide.");
-                        console.log(err);
                     }
+                } else {
+                    msg.reply("Vous n'avez pas la permission de faire ça.");
+                    console.log("Permission denied");
                 }
-            } else {
+            } catch (err) {
                 msg.reply("Vous n'avez pas la permission de faire ça.");
                 console.log("Permission denied");
+                console.log(err);
             }
         }
     } catch (err) {
@@ -164,7 +170,7 @@ client.on('messageCreate', msg => {
 
     // Warn command
     if (msg.content.startsWith(prefix + "warn")) {
-        if (msg.member.permissions.has("MANAGE_ROLES") == true) {
+        if (msg.member.permissions.has("MANAGE_ROLES") === true) {
             if (msg.content === prefix + "warn") {
                 msg.reply("Veuillez indiquer le membre à avertir.");
                 console.log("Warn explain sent");
@@ -220,7 +226,7 @@ client.on('messageCreate', msg => {
 
     // Unwarn command
     if (msg.content.startsWith(prefix + "unwarn")) {
-        if (msg.member.permissions.has("MANAGE_ROLES") == true) {
+        if (msg.member.permissions.has("MANAGE_ROLES") === true) {
             if (msg.content === prefix + "unwarn") {
                 msg.channel.bulkDelete(1);
                 msg.channel.send("Veuillez indiquer le membre à unavertir.");
@@ -239,7 +245,7 @@ client.on('messageCreate', msg => {
 
     // Warn number spectate command
     if (msg.content.startsWith(prefix + "warnspectate")) {
-        if (msg.member.permissions.has("MANAGE_ROLES") == true) {
+        if (msg.member.permissions.has("MANAGE_ROLES") === true) {
             if (msg.content === prefix + "warnspectate") {
                 msg.channel.bulkDelete(1);
                 msg.channel.send("Veuillez indiquer le nombre de warn à atteindre.");
