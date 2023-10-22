@@ -7,12 +7,13 @@ clientId = config.clientId;
 
 DiscordRPC.register(clientId);
 
+date = Date.now();
 async function setActivity() {
     if (!RPC) return;
     RPC.setActivity({
         details: "Developing a bot",
         state: "Developing Fluxy's bot",
-        startTimestamp: new Date(),
+        startTimestamp: date,
         largeImageKey: 'pxfuel',
         largeImageText: `Bot developed by CreeperFarm`,
         //smallImageKey: 'pxfuel',

@@ -1,7 +1,7 @@
 const {Client, Events, GatewayIntentBits, EmbedBuilder, ActivityType} = require('discord.js');
-const DiscordRPC = require('discord-rpc');
+//const DiscordRPC = require('discord-rpc');
 const fs = require('fs');
-const RPC = new DiscordRPC.Client({transport: 'ipc'});
+//const RPC = new DiscordRPC.Client({transport: 'ipc'});
 const client = new Client({intents: [GatewayIntentBits.MessageContent, GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.DirectMessages, GatewayIntentBits.GuildModeration]});
 
 const config = require('./config.js');
@@ -10,16 +10,17 @@ statusofbot = JSON.parse(fs.readFileSync('./status.json'))
 
 prefix = config.prefix;
 ownerid = config.ownerid;
-clientId = config.clientId;
+/*clientId = config.clientId;
 
 DiscordRPC.register(clientId);
 
+date = Date.now();
 async function setActivity() {
     if (!RPC) return;
     RPC.setActivity({
         details: "Development",
         state: "Being developed by CreeperFarm",
-        startTimestamp: new Date(),
+        startTimestamp: date,
         largeImageKey: 'pxfuel',
         largeImageText: `Bot developed by CreeperFarm`,
         //smallImageKey: 'pxfuel',
@@ -32,7 +33,7 @@ async function setActivity() {
             }
         ],
     });
-}
+}*/
 
 if (statusofbot === "in-dev") {
     testmode = true;
@@ -66,12 +67,12 @@ client.on("ready", async () => {
     //client.user.bannerUrl(["https://cdn.statically.io/gh/CreeperFarm/AppManga/main/fw.jpg"]);
 });
 
-RPC.on('ready', async () => {
+/*RPC.on('ready', async () => {
     setActivity();
     setInterval(() => {
         setActivity();
     }, 15e3);
-});
+});*/
 
 // msg when someone join the server
 
@@ -105,7 +106,10 @@ client.on('guildMemberRemove', member => {
 
 // Respond to commands
 client.on('messageCreate', msg => {
-    if (msg.author.bot) return;
+    //if (msg.author.bot) return;
+    if (msg.author.bot) {
+        console.log(msg.author.id);
+    }
 
 
     // Help command
@@ -487,4 +491,4 @@ client.on('messageCreate', msg => {
 // Bot login
 
 client.login(config.token)
-RPC.login({clientId}).catch(console.error());
+//RPC.login({clientId}).catch(console.error());
