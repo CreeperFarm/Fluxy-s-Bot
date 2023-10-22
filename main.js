@@ -22,8 +22,8 @@ async function setActivity() {
         startTimestamp: new Date(),
         largeImageKey: 'pxfuel',
         largeImageText: `Bot developed by CreeperFarm`,
-        smallImageKey: 'pxfuel',
-        smallImageText: `Bot developed by CreeperFarm`,
+        //smallImageKey: 'pxfuel',
+        //smallImageText: `Bot developed by CreeperFarm`,
         instance: false,
         buttons: [
             {
