@@ -1,18 +1,38 @@
-const { exec } = require('child_process');
-const {Client, Events, GatewayIntentBits, EmbedBuilder, messageLink, Message} = require('discord.js');
+const {Client, Events, GatewayIntentBits, EmbedBuilder, ActivityType} = require('discord.js');
+const DiscordRPC = require('discord-rpc');
 const fs = require('fs');
-const { resolve } = require('path');
+const RPC = new DiscordRPC.Client({transport: 'ipc'});
 const client = new Client({intents: [GatewayIntentBits.MessageContent, GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.DirectMessages, GatewayIntentBits.GuildModeration]});
 
+const config = require('./config.js');
 warns = JSON.parse(fs.readFileSync('./warns.json'))
 statusofbot = JSON.parse(fs.readFileSync('./status.json'))
-let rawdata = fs.readFileSync('config.json');
-let config = JSON.parse(rawdata);
-const TOKEN = config.botToken;
 
-const print = console.log;
+prefix = config.prefix;
+ownerid = config.ownerid;
+clientId = config.clientId;
 
-prefix = "$";
+DiscordRPC.register(clientId);
+
+async function setActivity() {
+    if (!RPC) return;
+    RPC.setActivity({
+        details: "Development",
+        state: "Being developed by CreeperFarm",
+        startTimestamp: new Date(),
+        largeImageKey: 'pxfuel',
+        largeImageText: `Bot developed by CreeperFarm`,
+        smallImageKey: 'pxfuel',
+        smallImageText: `Bot developed by CreeperFarm`,
+        instance: false,
+        buttons: [
+            {
+                label: "GitHub",
+                url: "https://github.com/CreeperFarm"
+            }
+        ],
+    });
+}
 
 if (statusofbot === "in-dev") {
     testmode = true;
@@ -22,10 +42,9 @@ if (statusofbot === "in-dev") {
     testmode = false;
 }
 
-// TODO: Fix it
-//  prefix = config.prefix;
+// When the bot is ready
 
-client.on("ready", () => {
+client.on("ready", async () => {
     if (testmode === true) {
         console.log("Logged in as " + client.user.tag + "! The prefix is " + prefix + " . The bot is in test mod.");
         const channel = client.channels.cache.find(ch => ch.name === 'testbot');
@@ -35,6 +54,23 @@ client.on("ready", () => {
         const channel = client.channels.cache.find(ch => ch.name === '『🤖』commandes');
         channel.send("Le bot est en ligne !");
     }
+    /*client.user.setPresence({
+        activities: [{
+            name: "Development",
+            type: ActivityType.Playing,
+            url: "https://twitch.tv/CreeperFarm",
+            state: "Being developed by CreeperFarm",
+            assets: "./src/images/logo_bot.png",
+        }],
+    });*/
+    //client.user.bannerUrl(["https://cdn.statically.io/gh/CreeperFarm/AppManga/main/fw.jpg"]);
+});
+
+RPC.on('ready', async () => {
+    setActivity();
+    setInterval(() => {
+        setActivity();
+    }, 15e3);
 });
 
 // msg when someone join the server
@@ -264,7 +300,7 @@ client.on('messageCreate', msg => {
 
     // Change log command
     if (msg.content.startsWith(prefix + "change-log") || msg.content.startsWith(prefix + "changelog")) {
-        if (msg.author.id == "455390851598778368") {
+        if (msg.author.id == ownerid) {
             if (msg.content === prefix + "change-log" || msg.content === prefix + "changelog") {
                 msg.channel.send("Veuillez indiquer le message du changelog.");
                 console.log("Changelog explain sent");
@@ -346,7 +382,7 @@ client.on('messageCreate', msg => {
     }
 
     if (msg.content.startsWith(prefix + "status") || msg.content.startsWith(prefix + "status-bot") || msg.content.startsWith(prefix + "statusbot")) {
-        if (msg.author.id == "455390851598778368") {
+        if (msg.author.id == ownerid) {
             if (msg.content === prefix + "status" || msg.content === prefix + "status-bot" || msg.content === prefix + "statusbot") {
                 msg.channel.send(`Le statut actuel du bot est : ${statusofbot}.`);
                 console.log("Statut actuelle envoyé");
@@ -392,7 +428,7 @@ client.on('messageCreate', msg => {
 
     // Stop Command
     if (msg.content === prefix + "stop") {
-        if (msg.author.id === "455390851598778368") {
+        if (msg.author.id === ownerid) {
             msg.channel.send("Arrêt du bot.");
             console.log("Bot stopped by " + msg.author + "(CreeperFarm).");
             client.destroy();
@@ -448,4 +484,7 @@ client.on('messageCreate', msg => {
     }
 });
 
-client.login(TOKEN)
+// Bot login
+
+client.login(config.token)
+RPC.login({clientId}).catch(console.error());

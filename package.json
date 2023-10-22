@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "discord.js": "^14.13.0"
+    "discord-rpc": "^4.0.1",
+    "discord.js": "^14.13.0",
+    "rpc": "^3.3.3"
   }
 }
