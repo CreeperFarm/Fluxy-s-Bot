@@ -123,7 +123,7 @@ client.on('messageCreate', msg => {
                 {name: prefix + "twitch", value: "Affiche le lien de la chaîne Twitch."},
                 {name: prefix + "tiktok", value: "Affiche le lien du compte TikTok."},
                 {name: prefix + "instagram", value: "Affiche le lien du compte Instagram."},
-                //{name: prefix + "réseaux ou " + prefix + "reseaux", value: "Affiche le lien de tous les réseaux."},
+                {name: prefix + "réseaux ou " + prefix + "reseaux", value: "Affiche le lien de tous les réseaux."},
                 {name: "Commande de modération : ", value: " "},
                 {name: prefix + "clear", value: "Supprime le nombre de messages indiqués."}
                 //{name: prefix + "warn", value: "Avertis un membre."},
@@ -152,10 +152,25 @@ client.on('messageCreate', msg => {
         msg.reply("Le lien du compte Instagram est https://www.instagram.com/jxste_fluxy._/")
         console.log("Instagram link sent");
     }
-    //if (msg.content === prefix + "réseaux" || msg.content === prefix + "reseaux") {
-    //    msg.reply("Le lien de tous les réseaux est https://linktr.ee/creeperfarm")
-    //    console.log("All links sent");
-    //}
+    if (msg.content === prefix + "youtube" || msg.content === prefix + "yt" || msg.content === prefix + "ytb") {
+        msg.reply("Le lien de la chaîne YouTube est https://www.youtube.com/@Jxste_fluxy_.")
+        console.log("YouTube link sent");
+    }
+    if (msg.content === prefix + "réseaux" || msg.content === prefix + "reseaux") {
+        const embed = new EmbedBuilder()
+            .setColor('#B072FF')
+            .setTitle("Serveur de Fluxy:")
+            .setFooter({text: "Développé par CreeperFarm", iconURL: "https://avatars.githubusercontent.com/u/62711198?s=96&v=4", url:"https://github.com/CreeperFarm"})
+            .addFields(
+                {name: "Les réseaux : ", value: " "},
+                {name: "Twitch", value: "https://www.twitch.tv/jxstefluxy"},
+                {name: "TikTok", value: "https://www.tiktok.com/@jxstefluxy"},
+                {name: "Instagram", value: "https://www.instagram.com/jxste_fluxy._/"},
+                {name: "YouTube", value: "https://www.youtube.com/@Jxste_fluxy_."},           
+            )
+        msg.reply({ embeds: [embed]});
+        console.log("Social Network command sent");
+    }
 
     // Clear command
     try {
@@ -179,10 +194,25 @@ client.on('messageCreate', msg => {
                                 msg.reply("Veuillez indiquer un nombre supérieur à 0.");
                                 console.log("Too few messages to delete");
                             } else {
-                                msg.channel.bulkDelete(args[1]);
+                                try {
+                                    msg.channel.bulkDelete(args[1]);
+                                } catch (err) {
+                                    msg.reply("An error as occured." + err);
+                                    console.log(err);
+                                } try {
+                                    msg.channel.bulkDelete(1);
+                                } catch (err) {
+                                    msg.reply("An error as occured." + err);
+                                    console.log(err);
+                                }
                                 msg.channel.send(args[1] + " messages supprimés.");
                                 // wait 5 seconds then delete the msg
-                                setTimeout(() => {msg.channel.bulkDelete(2);}, 12000);
+                                try {
+                                    setTimeout(() => {msg.channel.bulkDelete(1);}, 2000);
+                                } catch (err) {
+                                    msg.reply("An error as occured." + err);
+                                    console.log(err);
+                                }
                                 console.log(args[1] + " messages deleted");
                             }
                         } catch (err) {
