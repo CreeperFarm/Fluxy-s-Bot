@@ -49,7 +49,7 @@ if (statusofbot === "in-dev") {
 client.on("ready", async () => {
     if (testmode === true) {
         console.log("Logged in as " + client.user.tag + "! The prefix is " + prefix + " . The bot is in test mod.");
-        const channel = client.channels.cache.find(ch => ch.name === 'testbot');
+        const channel = client.channels.cache.find(ch => ch.id === '1183167015465263195');
         channel.send("Le bot est en ligne !");
     } else {
         console.log("Logged in as " + client.user.tag + "! The prefix is " + prefix + " .");
@@ -236,7 +236,7 @@ client.on('messageCreate', msg => {
     }
 
     // Warn command
-    if (msg.content.startsWith(prefix + "warn")) {
+    /*if (msg.content.startsWith(prefix + "warn")) {
         if (msg.member.permissions.has("MANAGE_ROLES") === true) {
             if (msg.content === prefix + "warn") {
                 msg.reply("Veuillez indiquer le membre à avertir.");
@@ -327,7 +327,7 @@ client.on('messageCreate', msg => {
             msg.channel.send("Vous n'avez pas la permission de faire ça.");
             console.log("Permission denied");
         }
-    }
+    }*/
 
     // Change log command
     if (msg.content.startsWith(prefix + "change-log") || msg.content.startsWith(prefix + "changelog")) {
@@ -337,7 +337,7 @@ client.on('messageCreate', msg => {
                 console.log("Changelog explain sent");
             } else {
                 if (testmode === true) {
-                    const channel = client.channels.cache.find(ch => ch.name === 'testbot');
+                    const channel = client.channels.cache.find(ch => ch.id === '1183167015465263195');
                     let args = msg.content.split(",");
                     if (args[0].startsWith(prefix + "changelog")) {
                         args[0] = args[0].replace(prefix + "changelog", "");
@@ -485,7 +485,7 @@ client.on('messageCreate', msg => {
                 client.on("ready", () => {
                     if (testmode === true) {
                         console.log("Logged in as " + client.user.tag + "! The prefix is " + prefix + " . The bot is in test mod.");
-                        const channel = client.channels.cache.find(ch => ch.name === 'testbot');
+                        const channel = client.channels.cache.find(ch => ch.name === '1183167015465263195');
                         channel.send("Le bot est en ligne !");
                     } else {
                         console.log("Logged in as " + client.user.tag + "! The prefix is " + prefix + " .");
@@ -545,13 +545,13 @@ client.on('messageCreate', msg => {
 
     if (msg.content === prefix + "uptime" || msg.content === prefix + "up") {
         if (years === 0 && days === 0 && hours === 0) {
-            msg.reply(`The bot is online since ${minutes} minute(s).`);
+            msg.reply(`Le bot est en ligne depuis ${minutes} minute(s).`);
         } else if (years === 0 && days === 0) {
-            msg.reply(`The bot is online since ${hours} hour(s) and ${minutes} minute(s).`)
+            msg.reply(`Le bot est en ligne depuis ${hours} heure(s) and ${minutes} minute(s).`)
         } else if (years === 0) {
-            msg.reply(`The bot is online since ${days} day(s) , ${hours} hour(s) and ${minutes} minute(s).`)
+            msg.reply(`Le bot est en ligne depuis ${days} jour(s) , ${hours} heure(s) and ${minutes} minute(s).`)
         } else {
-            msg.reply(`The bot is online since ${years} year(s) , ${days} day(s) , ${hours} hour(s) and ${minutes} minute(s).`)
+            msg.reply(`Le bot est en ligne depuis ${years} année(s) , ${days} jour(s) , ${hours} heure(s) and ${minutes} minute(s).`)
         }
         console.log("Up time send");
     }
