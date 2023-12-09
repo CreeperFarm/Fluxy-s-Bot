@@ -235,6 +235,8 @@ client.on('messageCreate', msg => {
         msg.reply("An error as ocurred");
     }
 
+    
+
     // Warn command
     /*if (msg.content.startsWith(prefix + "warn")) {
         if (msg.member.permissions.has("MANAGE_ROLES") === true) {
